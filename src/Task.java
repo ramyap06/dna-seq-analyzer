@@ -12,9 +12,9 @@ public class Task {
     private static String[] priority = {"High", "Medium", "Low"}; //priority/importance of task: will have 3 options, "high", "medium", and "low"
     private static ArrayList<String> type; //user can add options to the drop-down for what type of tasks to select from
 
-    public Task(String name, int year, int month, int day) {
+    public Task(String name, LocalDate deadline) {
         this.name = name;
-        this.deadline = LocalDate.of(year, month, day);
+        this.deadline = deadline;
         Task.type = new ArrayList<>();
     }
 
@@ -51,8 +51,16 @@ public class Task {
         return this.deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
+    public void setDeadline(String date) {
+        if (date.charAt(0) == '0') {
+            date = date.substring(1);
+        }
+        String[] tempArray = date.split("/");
+        int year = Integer.parseInt(tempArray[2]);
+        int month = Integer.parseInt(tempArray[1]);
+        int day = Integer.parseInt(tempArray[0]);
+
+        this.deadline = LocalDate.of(year, month, day);;
     }
 
     public static String[] getStatus() {
