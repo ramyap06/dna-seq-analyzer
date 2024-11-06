@@ -1,18 +1,22 @@
 # honors-project
 
 ## Overall Idea
-An application that allows the user to input a DNA sequence and the program will build a graphical DNA structure.  It will be color-coded and you can zoom in and scroll horizontally to see different parts of the DNA strand.  If making a DNA strand is too hard, then I will analyze the DNA, and given out a table of results such as the count of each base, or more complex, translate to RNA and the codons and amino acids present in percentage.
+An online planner application which allows the user to add, change, and delete tasks.  It also allows for organization using tags such as due date, completion, priority, and class.  The planner can be view in at least two different frameworks, one being a calendar and another a weekly planner.
 
 ## Implementation of CS 180
 
 ### File I/O
-Reads and parses a given file (either in .txt or FASTA format) as well as possibly rewrites the file to have two strands.  If a sequence is given and not a file, then it will be written into a default file and then parsed.
+Each user's task data will be loaded and saved in a file for easy access and memory purposes.
+
+### Network I/0
+Be able to access the planner from different computers / machines (very tentative!)
 
 ### Concurrency
-Can use threads for all of the calculation and parsing.  After the sequence is ready to be made, the rest will be built in order from first to last.
+Uses threads to update tasks in the background when the user interacts with the interface.
 
 ### GUI
-* Text box or upload file button to allow user to input DNA sequence/its file.
-* Graphical display of DNA strand
-* AND/OR Data visualizations about the DNA strand
-* Buttons for Upload File, Search, Build, etc
+* Calendar and weekly planner frame
+* Buttons such as add task
+* Textbox for picking a date and possibly time
+* Drop down for selecting tags such as class, priority, and 
+* Colors to make it more user-friendly
