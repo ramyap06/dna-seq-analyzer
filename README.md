@@ -11,7 +11,7 @@ An application that allows the user to input a DNA sequence and the sequence can
 ## Implementation of CS 180
 
 ### File I/O
-* reads and parses a given file (in .txt format) - these will be given since actual DNA sequence files are written in FASTA format and are incredibly long
+* reads and parses a given file (in .txt format) - I have created sample DNA sequences specifically from proteins using real NCBI datasets in order to get sequences of workable sizes
 * if a sequence is given and not a file, then it will be written into a default file and then parsed
 * data can be exported into a separate file containing all the analysis the user has prompted
 
@@ -25,6 +25,6 @@ Can use threads for the calculation and parsing.  After the sequence is ready to
 * Buttons for Upload File, Search, Build, etc
 
 ### Sources for DNA Sequences
-* sample1: https://www.ncbi.nlm.nih.gov/nuccore/CP002684.1?report=fasta
-* sample2: https://www.ncbi.nlm.nih.gov/nuccore/GU170821.1?report=fasta
+* sample1: https://www.ncbi.nlm.nih.gov/nuccore/NM_001382186.1?report=fasta
+* sample2: https://www.ncbi.nlm.nih.gov/nuccore/XM_024727368.1?report=fasta
 * 
