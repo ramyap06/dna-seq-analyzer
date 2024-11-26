@@ -10,7 +10,7 @@ import java.util.*;
 public class UserInterface implements Runnable {
 
     private JTextArea inputSequence;
-    private JButton analyzeButton; // user clicks this button after copy-pasting a sequence and specifying an action
+    private JButton analyzeButton;
     private JComboBox<String> analyzeOptions;
     private Database database;
     private File saveFile;
@@ -34,8 +34,14 @@ public class UserInterface implements Runnable {
         database = new Database(sequence);
 
         if (sequence.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No DNA sequence was entered", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No DNA Sequence was entered", "Error", JOptionPane.ERROR_MESSAGE);
             return;
+        }
+        for (int i = 0; i < sequence.length(); i++) {
+            if (sequence.charAt(i) != 'A' && sequence.charAt(i) != 'T' && sequence.charAt(i) != 'G' && sequence.charAt(i) != 'C') {
+                JOptionPane.showMessageDialog(null, "Invalid DNA Sequence", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
         if (selectedOption == null) {
             JOptionPane.showMessageDialog(null, "No option was selected", "Error", JOptionPane.ERROR_MESSAGE);
@@ -67,14 +73,15 @@ public class UserInterface implements Runnable {
                     boolean anySelected = false;
                     for (JCheckBox checkBox : checkBoxes) {
                         if (checkBox.isSelected()) {
-                            bases.append(checkBox.getText()).append(", ");
+                            bases.append(checkBox.getText()).append(",");
                             anySelected = true;
                         }
                     }
                     if (anySelected) {
-                        bases.setLength(bases.length() - 2);
+                        bases.setLength(bases.length() - 1);
                     }
                     input = bases.toString();
+                    System.out.println(input);
                 } else {
                     JOptionPane.showMessageDialog(null, "No options selected.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -143,7 +150,7 @@ public class UserInterface implements Runnable {
         String displayed = "";
 
         switch (option) {
-            case "Codon Search" -> {
+            case "Find Codon" -> {
                 JOptionPane.showMessageDialog(null, "Codon " + input + " was found " + result + " times in the given sequence");
                 displayed = "Codon Search Results:\n\n" + "Codon: " + input + "\nSearch Results: " + result + " times\n\n";
             }
@@ -175,14 +182,23 @@ public class UserInterface implements Runnable {
         String filename = "";
         if (!this.fileExists) {
             filename = JOptionPane.showInputDialog(null, "Enter a file name: (must be a .txt file)");
+            if (filename == null) {
+                JOptionPane.showMessageDialog(null, "A file name was not entered.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (!filename.contains("txt")) {
-                JOptionPane.showMessageDialog(null, "This file is not a .txt file, therefore cannot be made.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "This file is not a .txt file.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             saveFile = new File(filename);
-            this.fileExists = true;
         }
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(saveFile, true)))) {
+            if (!fileExists) {
+                writer.println("DNA Sequence:");
+                writer.println(originalSequence);
+                writer.write("\n");
+                this.fileExists = true;
+            }
             writer.write(toSave);
             writer.flush();
         } catch (IOException e) {

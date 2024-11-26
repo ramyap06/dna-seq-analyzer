@@ -101,6 +101,7 @@ public class Database {
             if (i != input.length - 1) {
                 result.append(",");
             }
+            inputBaseCount = 0;
         }
 
         return String.valueOf(result);
