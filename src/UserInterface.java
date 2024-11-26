@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class UserInterface implements Runnable {
 
@@ -31,11 +31,6 @@ public class UserInterface implements Runnable {
         String result = "";
         String toSave = "";
 
-        // TEST
-        System.out.println("INPUT SEQUENCE:\n" + sequence);
-        System.out.println("SELECTED OPTION:\n" + selectedOption);
-        //TEST
-
         database = new Database(sequence);
 
         if (sequence.isEmpty()) {
@@ -50,24 +45,14 @@ public class UserInterface implements Runnable {
         switch (selectedOption) {
             case "Double Strand" -> {
                 result = database.reverseSeq();
-
-                //TEST
-                System.out.println("RESULT:\n" + result);
-                //TEST
-
                 toSave = displayResult(result, selectedOption);
             }
             case "mRNA Sequence" -> {
                 result = database.rnaSeq();
-
-                //TEST
-                System.out.println("RESULT:\n" + result);
-                //TEST
-
                 toSave = displayResult(result, selectedOption);
             }
             case "Base Pair Percentage" -> {
-                String[] options = {"A", "T", "G", "C", "All Bases"};
+                String[] options = {"A", "T", "G", "C"};
                 String input = "";
                 JCheckBox[] checkBoxes = new JCheckBox[options.length];
                 JPanel bpPanel = new JPanel(new GridLayout(options.length, 1));
@@ -92,32 +77,29 @@ public class UserInterface implements Runnable {
                     input = bases.toString();
                 } else {
                     JOptionPane.showMessageDialog(null, "No options selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
 
                 result = database.bpPercentage(input);
-
-                //TEST
-                System.out.println("RESULT:\n" + result);
-                //TEST
-
                 toSave = displayResult(result, input, "Base Pair Percentage");
             }
             case "Find Codon" -> {
                 String codon = JOptionPane.showInputDialog(null, "Enter the codon (3 bases):");
                 if (codon != null && codon.length() == 3) {
                     result = database.codonSearch(codon);
-
-                    //TEST
-                    System.out.println("RESULT:\n" + result);
-                    //TEST
-
                     toSave = displayResult(result, codon, "Codon Search");
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid codon input. Please enter a 3-base codon.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
         }
-        int output = JOptionPane.showConfirmDialog(null, "Would you like to save these results in a file?");
+        int output = 0;
+        if (!fileExists) {
+            output = JOptionPane.showConfirmDialog(null, "Would you like to save these results in a file?");
+        } else {
+            output = JOptionPane.showConfirmDialog(null, String.format("Would you like to save these results in %s?", saveFile));
+        }
         if (output == JOptionPane.YES_OPTION) {
             saveToFile(sequence, toSave);
         }
@@ -143,11 +125,6 @@ public class UserInterface implements Runnable {
 
             result = resultBuilder.toString();
         }
-
-        //TEST
-        System.out.println("RESULT FOR DISPLAYING RESULTS:\n" + result);
-        System.out.println("OPTION FOR DISPLAYING RESULTS:\n" + option);
-        //TEST
 
         switch (option) {
             case "Double Strand" -> {
@@ -187,16 +164,10 @@ public class UserInterface implements Runnable {
                     displayBuilder.append("Percentage: ").append(result).append("%").append("\n\n");
                 }
                 JOptionPane.showMessageDialog(null, "The percentages of each base pair in the given sequence are as follows:\n" + result);
+                displayBuilder.append("\n");
                 displayed = displayBuilder.toString();
             }
         }
-
-        //TEST
-        System.out.println("RESULT FOR DISPLAYING RESULTS:\n" + result);
-        System.out.println("INPUT FOR DISPLAYING RESULTS:\n" + input);
-        System.out.println("OPTION FOR DISPLAYING RESULTS:\n" + option);
-        //TEST
-
         return displayed;
     }
 
@@ -204,10 +175,14 @@ public class UserInterface implements Runnable {
         String filename = "";
         if (!this.fileExists) {
             filename = JOptionPane.showInputDialog(null, "Enter a file name: (must be a .txt file)");
+            if (!filename.contains("txt")) {
+                JOptionPane.showMessageDialog(null, "This file is not a .txt file, therefore cannot be made.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             saveFile = new File(filename);
             this.fileExists = true;
         }
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(saveFile)))) {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(saveFile, true)))) {
             writer.write(toSave);
             writer.flush();
         } catch (IOException e) {
@@ -254,7 +229,7 @@ public class UserInterface implements Runnable {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        panel1.add(inputSequence);
+        panel1.add(inputSequence, scrollPane);
         panel2.add(analyzeOptions);
         panel3.add(analyzeButton);
 

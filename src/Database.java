@@ -1,7 +1,5 @@
 package src;
 
-import java.util.ArrayList;
-
 public class Database {
     private String data;
 
@@ -63,29 +61,7 @@ public class Database {
 
     public String bpPercentage(String input) {
         String result = "";
-        if (input.equals("All Bases")) {
-            double totalBaseCount = data.length();
-            double aCount = 0.0;
-            double tCount = 0.0;
-            double gCount = 0.0;
-            double cCount = 0.0;
-            for (int i = 0; i < data.length(); i++) {
-                char compare = data.charAt(i);
-                switch (compare) {
-                    case 'A' -> aCount++;
-                    case 'T' -> tCount++;
-                    case 'G' -> gCount++;
-                    case 'C' -> cCount++;
-                }
-            }
-
-            double aPercent = (aCount / totalBaseCount) * 100;
-            double tPercent = (tCount / totalBaseCount) * 100;
-            double gPercent = (gCount / totalBaseCount) * 100;
-            double cPercent = (cCount / totalBaseCount) * 100;
-
-            result = String.format("A:%.2f,T:%.2f,G:%.2f,C:%.2f", aPercent, tPercent, gPercent, cPercent);
-        } else if (input.contains(",")) {
+        if (input.contains(",")) {
             String[] bases = input.split(",");
             result = bpPercentage(bases);
         } else {
