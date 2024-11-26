@@ -6,7 +6,7 @@ An application that allows the user to input a DNA sequence and the sequence can
 1. If prompted, the program will return a reverse complement sequence (the hypothetical second strand) for the sequence.
 2. If prompted, the program can also return a messenger RNA sequence that would be used in protein synthesis.
 3. Can return the percentage of a certain base pair in the sequence.
-4. If prompted with a 3 base pairs, the program will return a count of how many times this three letter pair was found in the sequence (& if possible, highlight where it occurs in the sequence).
+4. If prompted with 3 base pairs, the program will return a count of how many times this three letter pair was found in the sequence (& if possible, highlight where it occurs in the sequence).
 
 ## Implementation of CS 180
 
