@@ -125,7 +125,11 @@ public class UserInterface implements Runnable {
                     breakSequence.add(result.substring((68 * counter) + 1, i + 1));
                     counter++;
                 }
+                if (i == result.length() - 1) {
+                    breakSequence.add(result.substring((68 * counter) + 1));
+                }
             }
+            resultBuilder.append(result.charAt(0));
             for (String seq : breakSequence) {
                 resultBuilder.append(seq).append("\n");
             }
