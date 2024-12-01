@@ -49,7 +49,7 @@ public class UserInterface implements Runnable {
         }
 
         switch (selectedOption) {
-            case "Double Strand" -> {
+            case "Reverse Complement Sequence" -> {
                 result = database.reverseSeq();
                 toSave = displayResult(result, selectedOption);
             }
@@ -138,9 +138,9 @@ public class UserInterface implements Runnable {
         }
 
         switch (option) {
-            case "Double Strand" -> {
-                JOptionPane.showMessageDialog(null, "Here is the double strand for the given sequence:\n" + result);
-                displayed = "Double Strand Results:\n" + result + "\n\n";
+            case "Reverse Complement Sequence" -> {
+                JOptionPane.showMessageDialog(null, "Here is the reverse complement sequence for the given sequence:\n" + result);
+                displayed = "Reverse Complement Sequence Results:\n" + result + "\n\n";
             }
             case "mRNA Sequence" -> {
                 JOptionPane.showMessageDialog(null, "Here is the mRNA strand for the given sequence:\n" + result);
@@ -229,18 +229,14 @@ public class UserInterface implements Runnable {
         JPanel panel1 = new JPanel();
         JPanel panel2 = new JPanel();
         JPanel panel3 = new JPanel();
+        JPanel panel4 = new JPanel();
 
-        String[] options = {"Double Strand", "mRNA Sequence", "Base Pair Percentage", "Find Codon"};
+        String[] options = {"Reverse Complement Sequence", "mRNA Sequence", "Base Pair Percentage", "Find Codon"};
         analyzeOptions = new JComboBox<>(options);
         analyzeOptions.setSelectedIndex(0);
 
         analyzeButton = new JButton("Analyze");
-        analyzeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleAnalysis();
-            }
-        });
+        analyzeButton.addActionListener(e -> handleAnalysis());
 
         inputSequence = new JTextArea(4, 68);
         inputSequence.setLineWrap(true);
@@ -253,9 +249,9 @@ public class UserInterface implements Runnable {
         panel2.add(analyzeOptions);
         panel3.add(analyzeButton);
 
-        frame.add(panel1, BorderLayout.NORTH);
+        frame.add(panel1, BorderLayout.CENTER);
         frame.add(panel2, BorderLayout.NORTH);
-        frame.add(panel3, BorderLayout.NORTH);
+        frame.add(panel3, BorderLayout.SOUTH);
 
         frame.setVisible(true);
     }
