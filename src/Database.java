@@ -12,26 +12,21 @@ public class Database {
 
         for (int i = 0; i < data.length(); i++) {
             char compare = data.charAt(i);
-            System.out.println(compare);
             switch (compare) {
                 case 'A' -> {
                     reverseString.append("T");
-                    System.out.println(reverseString);
                 }
 
                 case 'T' -> {
                     reverseString.append("A");
-                    System.out.println(reverseString);
                 }
 
                 case 'G' -> {
                     reverseString.append("C");
-                    System.out.println(reverseString);
                 }
 
                 case 'C' -> {
                     reverseString.append("G");
-                    System.out.println(reverseString);
                 }
             }
         }

@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
 
-public class UserInterface implements Runnable {
+public class UserInterface implements Runnable, Serializable {
 
     private JTextArea inputSequence;
     private JButton analyzeButton;
@@ -94,7 +94,7 @@ public class UserInterface implements Runnable {
                 String codon = JOptionPane.showInputDialog(null, "Enter the codon (3 bases):");
                 if (codon != null && codon.length() == 3) {
                     result = database.codonSearch(codon);
-                    toSave = displayResult(result, codon, "Codon Search");
+                    toSave = displayResult(result, codon, "Find Codon");
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid codon input. Please enter a 3-base codon.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -146,6 +146,12 @@ public class UserInterface implements Runnable {
                 JOptionPane.showMessageDialog(null, "Here is the mRNA strand for the given sequence:\n" + result);
                 displayed = "mRNA Sequence Results:\n" + result + "\n\n";
             }
+            case "Original Sequence" -> {
+                displayed = result;
+            }
+            default -> {
+                break;
+            }
         }
         return displayed;
     }
@@ -178,6 +184,9 @@ public class UserInterface implements Runnable {
                 displayBuilder.append("\n");
                 displayed = displayBuilder.toString();
             }
+            default -> {
+                break;
+            }
         }
         return displayed;
     }
@@ -199,7 +208,7 @@ public class UserInterface implements Runnable {
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(saveFile, true)))) {
             if (!fileExists) {
                 writer.println("DNA Sequence:");
-                writer.println(originalSequence);
+                writer.println(displayResult(originalSequence, "Original Sequence"));
                 writer.write("\n");
                 this.fileExists = true;
             }
@@ -212,48 +221,52 @@ public class UserInterface implements Runnable {
     }
 
     public void run() {
-        JFrame frame = new JFrame("DNA Sequence Analyzer");
+        try {
+            JFrame frame = new JFrame("DNA Sequence Analyzer");
 
-        Container content = frame.getContentPane();
-        content.setLayout(new GridLayout(4, 1));
+            Container content = frame.getContentPane();
+            content.setLayout(new GridLayout(4, 1));
 
-        JLabel titleLabel = new JLabel("Welcome to the DNA Sequence Analyzer!", JLabel.CENTER);
-        titleLabel.setFont(new java.awt.Font("Greyscale", java.awt.Font.BOLD, 24));
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        content.add(titleLabel, BorderLayout.NORTH);
+            JLabel titleLabel = new JLabel("Welcome to the DNA Sequence Analyzer!", JLabel.CENTER);
+            titleLabel.setFont(new java.awt.Font("Greyscale", java.awt.Font.BOLD, 24));
+            titleLabel.setHorizontalAlignment(JLabel.CENTER);
+            content.add(titleLabel, BorderLayout.NORTH);
 
-        frame.setSize(1000, 800);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+            frame.setSize(1000, 800);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
 
-        JPanel panel1 = new JPanel();
-        JPanel panel2 = new JPanel();
-        JPanel panel3 = new JPanel();
-        JPanel panel4 = new JPanel();
+            JPanel panel1 = new JPanel();
+            JPanel panel2 = new JPanel();
+            JPanel panel3 = new JPanel();
+            JPanel panel4 = new JPanel();
 
-        String[] options = {"Reverse Complement Sequence", "mRNA Sequence", "Base Pair Percentage", "Find Codon"};
-        analyzeOptions = new JComboBox<>(options);
-        analyzeOptions.setSelectedIndex(0);
+            String[] options = {"Reverse Complement Sequence", "mRNA Sequence", "Base Pair Percentage", "Find Codon"};
+            analyzeOptions = new JComboBox<>(options);
+            analyzeOptions.setSelectedIndex(0);
 
-        analyzeButton = new JButton("Analyze");
-        analyzeButton.addActionListener(e -> handleAnalysis());
+            analyzeButton = new JButton("Analyze");
+            analyzeButton.addActionListener(e -> handleAnalysis());
 
-        inputSequence = new JTextArea(4, 68);
-        inputSequence.setLineWrap(true);
+            inputSequence = new JTextArea(4, 68);
+            inputSequence.setLineWrap(true);
 
-        JScrollPane scrollPane = new JScrollPane(inputSequence);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            JScrollPane scrollPane = new JScrollPane(inputSequence);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        panel1.add(inputSequence, scrollPane);
-        panel2.add(analyzeOptions);
-        panel3.add(analyzeButton);
+            panel1.add(inputSequence, scrollPane);
+            panel2.add(analyzeOptions);
+            panel3.add(analyzeButton);
 
-        frame.add(panel1, BorderLayout.CENTER);
-        frame.add(panel2, BorderLayout.NORTH);
-        frame.add(panel3, BorderLayout.SOUTH);
+            frame.add(panel1, BorderLayout.CENTER);
+            frame.add(panel2, BorderLayout.NORTH);
+            frame.add(panel3, BorderLayout.SOUTH);
 
-        frame.setVisible(true);
+            frame.setVisible(true);
+        } catch (Exception e) {
+            System.out.println("DNA Sequence was copied and pasted into the JTextArea.");
+        }
     }
 
     public static void main(String[] args) {
